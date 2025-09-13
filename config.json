@@ -1,0 +1,6 @@
+{
+    "lang_src":"en",
+    "lang_tgt":"zh",
+    "tokenizer_file":"./tokenizers/unigram",
+    "k_train":"1000000"
+}

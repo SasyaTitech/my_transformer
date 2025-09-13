@@ -53,6 +53,7 @@ class LayerNormalization(nn.Module):
         self.eps = eps # 防止分母为0
         self.alpha = nn.Parameter(torch.ones(1)) # 乘
         self.bias = nn.Parameter(torch.zeros(1)) # 加 
+        # 这里alpha和bias被注册为了nn.Parameter所以会被学习和更新
 
     def forward(self, x):
         mean = x.mean(dim = -1, keepdim = True)
@@ -259,4 +260,11 @@ def build_transformer(src_vocab_size: int, tgt_vocab_size: int, src_seq_len: int
     projection_layer = ProjectionLayer(d_model, tgt_vocab_size)
 
     transformer = Transformer(encoder, decoder, src_embed, tgt_embed, src_pos, tgt_pos, projection_layer)
+
+    # 把所有维度超过1的超参数以xavier_uniform方法初始化（
+    for p in transformer.parameters():
+        if p.dim() > 1:
+            nn.init.xavier_uniform_(p)
+    
+    return transformer
     
