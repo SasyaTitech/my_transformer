@@ -17,11 +17,6 @@ from torch.utils.tensorboard import SummaryWriter
 import warnings
 from tqdm import tqdm
 
-import json
-
-with open("config.json", "r", encoding = "utf-8") as f:
-    config = json.load(f)
-
 def get_all_sentences(config, ds):
     fields = [f"{config["lang_tgt"]}", f"{config["lang_src"]}"]
     for row in ds:
@@ -48,6 +43,7 @@ def get_or_build_tokenizer(config, ds):
             unk_token = "<unk>",
         )
         tokenizer.train_from_iterator(get_all_sentences(config, ds), trainer = trainer)
+        tokenizer.save(str(tokenizer_path))
         # 把已经变成ids即将送去model的句子前后加上<s> </s>所对应的id
         # 这件事改成在Dataset（from pytorch）里干了
     else:
@@ -87,7 +83,7 @@ def get_model(config, vocab_src_len, vocab_tgt_len):
     return model
     
 def train_model(config):
-    device = torch.device('cuda' if torch.cuda_is_available() else 'cpu')
+    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     print(f'Using device {device}')
 
     Path(config['model_folder']).mkdir(parents = True, exist_ok = True)
@@ -95,7 +91,7 @@ def train_model(config):
     train_dataloader, val_dataloader, tokenizer = get_ds(config) #batch size是写在config里的
     model = get_model(config, tokenizer.get_vocab_size(), tokenizer.get_vocab_size()).to(device) # 我们这里是中英一起分词的所以共用一个词表
     
-    # Tensorboard可视化
+    # Tensorboard可视化 这里还没弄明白
     writer = SummaryWriter(config['experiment_name'])
 
     optimizer = torch.optim.Adam(model.parameters(), lr = config['lr'], eps = 1e-9)
@@ -121,7 +117,7 @@ def train_model(config):
 
             encoder_input = batch['encoder_input'].to(device)
             decoder_input = batch['decoder_input'].to(device)
-            encoder_mask = batch['encoder_batch'].to(device)
+            encoder_mask = batch['encoder_mask'].to(device)
             decoder_mask = batch['decoder_mask'].to(device)
 
             # run the tensor through the transformer

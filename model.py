@@ -67,7 +67,7 @@ class FeedForwardBlock(nn.Module):
         super().__init__()
         self.linear_1 = nn.Linear(d_model, d_ff) # for W1 and B1
         self.dropout = nn.Dropout(dropout)
-        nn.linear_2 = nn.Linear(d_ff, d_model) # for W2 and B2
+        self.linear_2 = nn.Linear(d_ff, d_model) # for W2 and B2
 
     def forward(self, x):
         return self.linear_2(self.dropout(torch.relu(self.linear_1(x))))
@@ -112,7 +112,7 @@ class MultiHeadAttentionBlock(nn.Module):
 
         query = query.view(query.shape[0], query.shape[1], self.h, self.d_k).transpose(1, 2) # 把最后的d_model个要素划分成 h 个 d_k 维向量
         # (Batch, Seq_len, d_model) -> (Batch, Seq_len, h, d_k) -> (Batch, h, Seq_len, d_k) 每个头的query都视为浓缩了整个seq的信息
-        key = key.view(key.shape[0], query.shape[1], self.h, self.d_k).transpose(1,2)
+        key = key.view(key.shape[0], key.shape[1], self.h, self.d_k).transpose(1,2)
         value = value.view(value.shape[0], value.shape[1], self.h, self.d_k).transpose(1, 2)
 
         x, self.attention_scores = MultiHeadAttentionBlock.attention(query, key, value, mask, self.dropout)

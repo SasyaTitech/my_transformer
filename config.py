@@ -4,15 +4,16 @@ def get_config():
     return {
         "lang_src" : "en",
         "lang_tgt" : "zh",
-        "tokenizer_file" : "./tokenizers/unigram",
+        "tokenizer_file" : "./unigram.json",
         "k_train" : "1000000",
-        "seq_len" : 500,
+        "seq_len" : 1500,
         "batch_size" : 8,
         "d_model" : 512,
         "lr": 10**-4,
         "model_folder" : "weights",
         "model_basename" : "tmodel_",
         "preload" : None,
+        "num_epochs" : 20,
         "experiment_name" : "runs/tmodel" # 储存loss之类的实验数据
     }
 

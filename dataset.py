@@ -12,11 +12,14 @@ class BilingualDataset(Dataset):
         self.tokenizer = tokenizer
         self.src_lang = src_lang
         self.tgt_lang = tgt_lang
+        self.seq_len = seq_len
 
-        self.sos_token = torch.Tensor([tokenizer.token_to_id(['<s>'])], dtype = torch.int64)
-        self.eos_token = torch.Tensor([tokenizer.token_to_id(['</s>'])], dtype = torch.int64)
-        self.pad_token = torch.Tensor([tokenizer.token_to_id(['<pad>'])], dtype = torch.int64)
+        # 别把tensor的大小写搞错了，tensor是函数式构造器（用普通函数创建并返回对象），Tensor是类构造器（用类名，调用其__init__来构造）
+        self.sos_token = torch.tensor([tokenizer.token_to_id('<s>')], dtype = torch.int64)
+        self.eos_token = torch.tensor([tokenizer.token_to_id('</s>')], dtype = torch.int64)
+        self.pad_token = torch.tensor([tokenizer.token_to_id('<pad>')], dtype = torch.int64)
         # 因为词表可能非常大，我开的是5w其实还好？，所以这里用int64
+        # ？ 需要在dataset里把tensor移动到gpu
 
     def __len__(self):
         return len(self.ds)

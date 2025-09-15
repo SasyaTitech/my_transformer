@@ -1,1 +1,5 @@
 .python-version
+*.json
+__pycache__/
+weights/
+runs/
