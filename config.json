@@ -2,5 +2,8 @@
     "lang_src":"en",
     "lang_tgt":"zh",
     "tokenizer_file":"./tokenizers/unigram",
-    "k_train":"1000000"
+    "k_train":"1000000",
+    "seq_len":,
+    "batch_size",
+    "d_model",
 }
