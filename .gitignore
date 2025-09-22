@@ -6,3 +6,4 @@ runs/
 logs/
 weights/
 unigram.json
+.git-credentials
