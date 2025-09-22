@@ -61,15 +61,23 @@ def get_ds(config):
 
     max_len_src = 0
     max_len_tgt = 0
+    max_len_src_val = 0
+    max_len_tgt_val = 0
     
     for item in ds_train:
         src_ids = tokenizer.encode(item['translation'][config['lang_src']]).ids
         tgt_ids = tokenizer.encode(item['translation'][config['lang_tgt']]).ids
         max_len_src = max(max_len_src, len(src_ids))
         max_len_tgt = max(max_len_tgt, len(tgt_ids))
+        
+    for item in ds_val:
+        src_ids = tokenizer.encode(item['translation'][config['lang_src']]).ids
+        tgt_ids = tokenizer.encode(item['translation'][config['lang_tgt']]).ids
+        max_len_src_val = max(max_len_src_val, len(src_ids))
+        max_len_tgt_val = max(max_len_tgt_val, len(tgt_ids))
     
-    print(f'Max length of source sentences: {max_len_src}')
-    print(f'Max length of target sentences: {max_len_tgt}')
+    print(f'Max length of source sentences: {max(max_len_src, max_len_src_val)}')
+    print(f'Max length of target sentences: {max(max_len_tgt, max_len_tgt_val)}')
 
     train_dataloader = DataLoader(train_ds, batch_size = config['batch_size'], shuffle = True)
     val_dataloader = DataLoader(val_ds, batch_size = 1, shuffle = True)

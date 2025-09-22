@@ -5,8 +5,8 @@ def get_config():
         "lang_src" : "en",
         "lang_tgt" : "zh",
         "tokenizer_file" : "./unigram.json",
-        "k_train" : "1000000",
-        "seq_len" : 1500,
+        "k_train" : "10000",
+        "seq_len" : 500,
         "batch_size" : 8,
         "d_model" : 512,
         "lr": 10**-4,
@@ -19,6 +19,6 @@ def get_config():
 
 def get_weights_file_path(config, _epoch:str):
     model_folder = config['model_folder']
-    model_basename = config['mode_basename']
+    model_basename = config['model_basename']
     model_filename = f"{model_basename}{_epoch}.pt"
     return str(Path('.') / model_folder / model_filename)
